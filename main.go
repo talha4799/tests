@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -123,7 +124,11 @@ func main() {
 	mux.HandleFunc("/weather", corsMiddleware(onlyAllow(http.MethodGet, weatherHandler)))
 	mux.HandleFunc("/", corsMiddleware(notFoundHandler))
 
-	port := ":8088"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	port = ":" + port
 	fmt.Printf("🚀 Server running on http://localhost%s\n", port)
 	fmt.Println("   GET /health   → server health status")
 	fmt.Println("   GET /check    → detailed server check")
